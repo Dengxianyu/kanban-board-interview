@@ -6,23 +6,19 @@ const DEBOUNCE_MS = 300;
 
 export function useLocalStorage(cards: Card[]) {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const cardsRef = useRef(cards);
 
-  // Keep ref in sync with latest cards
-  cardsRef.current = cards;
-
-  const debouncedSave = useCallback(() => {
+  const debouncedSave = useCallback((cardsToSave: Card[]) => {
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
     timerRef.current = setTimeout(() => {
-      saveCards(cardsRef.current);
+      saveCards(cardsToSave);
       timerRef.current = null;
     }, DEBOUNCE_MS);
   }, []);
 
   useEffect(() => {
-    debouncedSave();
+    debouncedSave(cards);
   }, [cards, debouncedSave]);
 
   useEffect(() => {
@@ -30,7 +26,7 @@ export function useLocalStorage(cards: Card[]) {
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
-      saveCards(cardsRef.current);
+      saveCards(cards);
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
@@ -39,8 +35,8 @@ export function useLocalStorage(cards: Card[]) {
       window.removeEventListener('beforeunload', handleBeforeUnload);
       if (timerRef.current) {
         clearTimeout(timerRef.current);
-        saveCards(cardsRef.current);
+        saveCards(cards);
       }
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 }

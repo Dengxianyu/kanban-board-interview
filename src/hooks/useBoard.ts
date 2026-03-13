@@ -69,18 +69,18 @@ export function useBoard() {
   }, []);
 
   const moveCard = useCallback((cardId: string, targetColumnId: ColumnId) => {
-    setCards((prev) => {
-      const maxOrder = prev
-        .filter((c) => c.columnId === targetColumnId)
-        .reduce((max, c) => Math.max(max, c.order), -1);
+    const maxOrder = cards
+      .filter((c) => c.columnId === targetColumnId)
+      .reduce((max, c) => Math.max(max, c.order), -1);
 
-      return prev.map((card) =>
+    setCards(
+      cards.map((card) =>
         card.id === cardId
           ? { ...card, columnId: targetColumnId, order: maxOrder + 1 }
           : card
-      );
-    });
-  }, []);
+      )
+    );
+  }, [cards]);
 
   return {
     cards,
