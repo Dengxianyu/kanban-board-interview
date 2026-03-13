@@ -26,10 +26,19 @@ export function useLocalStorage(cards: Card[]) {
   }, [cards, debouncedSave]);
 
   useEffect(() => {
-    return () => {
+    const handleBeforeUnload = () => {
       if (timerRef.current) {
         clearTimeout(timerRef.current);
-        // Save immediately on unmount
+      }
+      saveCards(cardsRef.current);
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
         saveCards(cardsRef.current);
       }
     };

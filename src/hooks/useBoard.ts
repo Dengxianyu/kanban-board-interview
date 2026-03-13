@@ -34,23 +34,25 @@ export function useBoard() {
 
   const addCard = useCallback(
     (title: string, description: string, tags: string[], priority: Priority, columnId: ColumnId) => {
-      const maxOrder = cards
-        .filter((c) => c.columnId === columnId)
-        .reduce((max, c) => Math.max(max, c.order), -1);
+      setCards((prev) => {
+        const maxOrder = prev
+          .filter((c) => c.columnId === columnId)
+          .reduce((max, c) => Math.max(max, c.order), -1);
 
-      const newCard: Card = {
-        id: generateId(),
-        title,
-        description,
-        tags,
-        priority,
-        columnId,
-        createdAt: Date.now(),
-        order: maxOrder + 1,
-      };
-      setCards((prev) => [...prev, newCard]);
+        const newCard: Card = {
+          id: generateId(),
+          title,
+          description,
+          tags,
+          priority,
+          columnId,
+          createdAt: Date.now(),
+          order: maxOrder + 1,
+        };
+        return [...prev, newCard];
+      });
     },
-    [cards]
+    []
   );
 
   const updateCard = useCallback(

@@ -11,21 +11,29 @@ interface ColumnProps {
 export function Column({ column }: ColumnProps) {
   const { getColumnCards, filteredCards, handleDragOver, handleDrop } = useBoardContext();
   const [isAdding, setIsAdding] = useState(false);
+  const [isDragOver, setIsDragOver] = useState(false);
 
   const columnCards = getColumnCards(column.id, filteredCards);
 
   const onDragOver = (e: DragEvent<HTMLDivElement>) => {
     handleDragOver(e, column.id);
+    setIsDragOver(true);
+  };
+
+  const onDragLeave = () => {
+    setIsDragOver(false);
   };
 
   const onDrop = (e: DragEvent<HTMLDivElement>) => {
     handleDrop(e, column.id);
+    setIsDragOver(false);
   };
 
   return (
     <div
-      className="kanban-column"
+      className={`kanban-column${isDragOver ? ' drag-over' : ''}`}
       onDragOver={onDragOver}
+      onDragLeave={onDragLeave}
       onDrop={onDrop}
       data-testid={`column-${column.id}`}
       data-column-id={column.id}
