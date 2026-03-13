@@ -38,5 +38,5 @@ export function useLocalStorage(cards: Card[]) {
         saveCards(cards);
       }
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 }
