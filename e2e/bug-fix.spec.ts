@@ -258,7 +258,7 @@ test.describe('Bug Fix - Data Persistence', () => {
   });
 
   test('Test 10: Drag then immediate reload preserves result (beforeunload)', async ({ page }) => {
-    // Combines Bug 1 + Bug 2: drag (may use stale state) then reload immediately
+    // Targets Bug 1: drag then reload — beforeunload must save correct data
     const firstCard = page.locator('[data-column-id="todo"] .kanban-card').first();
     const cardTitle = await firstCard.locator('.card-title').textContent();
     const cardId = await firstCard.getAttribute('data-card-id');
