@@ -25,8 +25,8 @@ export function useLocalStorage(cards: Card[]) {
     const handleBeforeUnload = () => {
       if (timerRef.current) {
         clearTimeout(timerRef.current);
+        saveCards(cards);
       }
-      saveCards(cards);
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
